@@ -1,4 +1,5 @@
 {% load i18n admin_static jet_tags %}
+{% load compress %}
 {% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}{% format_current_language LANGUAGE_CODE as LANGUAGE_CODE %}{% get_themes as THEMES %}{% get_current_theme as THEME %}{% get_current_jet_version as JET_VERSION %}{% get_side_menu_compact as SIDE_MENU_COMPACT %}
 {% block html %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
@@ -6,19 +7,20 @@
     <title>{% block title %}{% endblock %}</title>
     <meta name="copyright" content="geex-arts.com">
     {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
-
-    <link href="{% static "jet/vendor/select2/css/select2.min.css" %}" rel="stylesheet" />
-    <link href="{% static "jet/vendor/jquery-ui/jquery-ui.min.css" %}" rel="stylesheet" />
-    <link href="{% static "jet/vendor/jquery-ui-timepicker/jquery.ui.timepicker.css" %}" rel="stylesheet" />
-    <link href="{% static "jet/vendor/perfect-scrollbar/css/perfect-scrollbar.css" %}" rel="stylesheet" />
-    <link href="{% static "jet/css/icons/style.css" %}?v={{ JET_VERSION }}" rel="stylesheet" />
-    <link href="{% static "jet/css/themes/"|add:THEME|add:"/base.css" %}?v={{ JET_VERSION }}" rel="stylesheet" class="base-stylesheet" />
-    <link href="{% static "jet/css/themes/"|add:THEME|add:"/select2.theme.css" %}?v={{ JET_VERSION }}" rel="stylesheet" class="select2-stylesheet" />
-    <link href="{% static "jet/css/themes/"|add:THEME|add:"/jquery-ui.theme.css" %}?v={{ JET_VERSION }}" rel="stylesheet" class="jquery-ui-stylesheet" />
+{% compress css %}
+    <link type="text/css" href="{% static "jet/vendor/select2/css/select2.min.css" %}" rel="stylesheet" />
+    <link type="text/css" href="{% static "jet/vendor/jquery-ui/jquery-ui.min.css" %}" rel="stylesheet" />
+    <link type="text/css" href="{% static "jet/vendor/jquery-ui-timepicker/jquery.ui.timepicker.css" %}" rel="stylesheet" />
+    <link type="text/css" href="{% static "jet/vendor/perfect-scrollbar/css/perfect-scrollbar.css" %}" rel="stylesheet" />
+    <link type="text/css" href="{% static "jet/css/icons/style.css" %}?v={{ JET_VERSION }}" rel="stylesheet" />
+    <link type="text/css" href="{% static "jet/css/themes/"|add:THEME|add:"/base.css" %}?v={{ JET_VERSION }}" rel="stylesheet" class="base-stylesheet" />
+    <link type="text/css" href="{% static "jet/css/themes/"|add:THEME|add:"/select2.theme.css" %}?v={{ JET_VERSION }}" rel="stylesheet" class="select2-stylesheet" />
+    <link type="text/css" href="{% static "jet/css/themes/"|add:THEME|add:"/jquery-ui.theme.css" %}?v={{ JET_VERSION }}" rel="stylesheet" class="jquery-ui-stylesheet" />
     <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="{% block stylesheet_ie %}{% static "admin/css/ie.css" %}{% endblock %}" /><![endif]-->
     {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />{% endif %}
+    {% endcompress %}
     {% block extrastyle %}{% endblock %}
-
+{% compress js %}
     <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";</script>
     <script type="text/javascript">window.__admin_utc_offset__ = "{% filter escapejs %}{% now "Z" %}{% endfilter %}";</script>
     <script type="text/javascript" charset="utf-8">
@@ -27,30 +29,31 @@
         var DATETIME_FORMAT = "{% get_datetime_format %}";
     </script>
     <script type="text/javascript" src="{% url 'jet:jsi18n' %}"></script>
-    <script src="{% static "jet/vendor/jquery/jquery-1.11.3.min.js" %}"></script>
-    <script src="{% static "jet/vendor/jquery-ui/jquery-ui.min.js" %}"></script>
-    <script src="{% static "jet/vendor/jquery-ui-timepicker/jquery.ui.timepicker.js" %}"></script>
-    <script src="{% static "jet/vendor/select2/js/select2.full.min.js" %}"></script>
-    <script src="{% static "jet/vendor/perfect-scrollbar/js/perfect-scrollbar.min.js" %}"></script>
-    <script src="{% static "jet/vendor/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js" %}"></script>
-    <script src="{% static "jet/vendor/jquery-cookie/jquery.cookie-1.4.1.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "jet/vendor/jquery/jquery-1.11.3.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "jet/vendor/jquery-ui/jquery-ui.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "jet/vendor/jquery-ui-timepicker/jquery.ui.timepicker.js" %}"></script>
+    <script type="text/javascript" src="{% static "jet/vendor/select2/js/select2.full.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "jet/vendor/perfect-scrollbar/js/perfect-scrollbar.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "jet/vendor/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "jet/vendor/jquery-cookie/jquery.cookie-1.4.1.min.js" %}"></script>
     {% if LANGUAGE_CODE|slice:":2" != 'en' %}
         {% with "jet/vendor/jquery-ui/i18n/datepicker-"|add:LANGUAGE_CODE|add:".js" as url %}
-            <script src="{% static url %}"></script>
+            <script type="text/javascript" src="{% static url %}"></script>
         {% endwith %}
         {% with "jet/vendor/jquery-ui-timepicker/i18n/jquery.ui.timepicker-"|add:LANGUAGE_CODE|add:".js" as url %}
-            <script src="{% static url %}"></script>
+            <script type="text/javascript" src="{% static url %}"></script>
         {% endwith %}
         {% with "jet/vendor/select2/js/i18n/"|add:LANGUAGE_CODE|add:".js" as url %}
-            <script src="{% static url %}"></script>
+            <script type="text/javascript" src="{% static url %}"></script>
         {% endwith %}
     {% endif %}
     <script type="text/javascript" charset="utf-8">
         var jet = jet || {};
         jet.jQuery = jQuery.noConflict(true);
     </script>
-    <script src="{% static "jet/js/main.min.js" %}?v={{ JET_VERSION }}"></script>
-    <script src="{% static "jet/js/select2.jet.min.js" %}?v={{ JET_VERSION }}"></script>
+    <script type="text/javascript" src="{% static "jet/js/main.min.js" %}?v={{ JET_VERSION }}"></script>
+    <script type="text/javascript" src="{% static "jet/js/select2.jet.min.js" %}?v={{ JET_VERSION }}"></script>
+    {% endcompress %}
     {% block extrahead %}{% endblock %}
 </head>
 <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
